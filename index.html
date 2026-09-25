@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canopy — Forest Monitoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="canopy-line" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 4 L32 22 H25 L33 34 H7 L15 22 H8 Z" fill="currentColor"/>
+      <rect x="18" y="34" width="4" height="4" fill="currentColor"/>
+    </svg>
+    <div>
+      <h1>Canopy</h1>
+      <p>Acoustic &amp; motion watch for standing timber</p>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="mode-toggle" role="group" aria-label="Data source">
+      <button id="btn-live" class="mode-btn active" type="button">Live</button>
+      <button id="btn-demo" class="mode-btn" type="button">Demo</button>
+    </div>
+    <div class="device-chip">
+      <span id="status-dot" class="status-dot offline"></span>
+      <span id="device-label">ESP32_01 — offline</span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- Big alert banner -->
+  <section id="alert-banner" class="alert-banner state-normal">
+    <div class="alert-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path id="alert-icon-path" d="M12 8v5M12 16h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="alert-text">
+      <p class="alert-eyebrow" id="alert-eyebrow">Detection status</p>
+      <p class="alert-title" id="alert-title">Listening — all readings normal</p>
+    </div>
+    <div class="confidence-ring">
+      <svg viewBox="0 0 80 80">
+        <circle class="ring-track" cx="40" cy="40" r="34"/>
+        <circle id="ring-fill" class="ring-fill" cx="40" cy="40" r="34"/>
+      </svg>
+      <span id="confidence-value">0%</span>
+    </div>
+  </section>
+
+  <div class="grid">
+
+    <!-- System status -->
+    <section class="card">
+      <h2>System status</h2>
+      <dl class="status-list">
+        <div class="status-row">
+          <dt>Node</dt>
+          <dd id="status-device">—</dd>
+        </div>
+        <div class="status-row">
+          <dt>Connection</dt>
+          <dd id="status-online" class="pill pill-offline">Offline</dd>
+        </div>
+        <div class="status-row">
+          <dt>Last update</dt>
+          <dd id="status-last-update">—</dd>
+        </div>
+        <div class="status-row">
+          <dt>Wi-Fi</dt>
+          <dd id="status-wifi">—</dd>
+        </div>
+      </dl>
+    </section>
+
+    <!-- Sensor values -->
+    <section class="card card-wide">
+      <h2>Sensor readings</h2>
+      <div class="sensor-grid">
+        <div class="sensor-tile">
+          <span class="sensor-label">Vibration</span>
+          <span class="sensor-value" id="sv-vibration">0.00</span>
+          <div class="sensor-bar"><div class="sensor-bar-fill" id="sb-vibration"></div></div>
+        </div>
+        <div class="sensor-tile">
+          <span class="sensor-label">Accel X</span>
+          <span class="sensor-value" id="sv-accelx">0.00<small>g</small></span>
+        </div>
+        <div class="sensor-tile">
+          <span class="sensor-label">Accel Y</span>
+          <span class="sensor-value" id="sv-accely">0.00<small>g</small></span>
+        </div>
+        <div class="sensor-tile">
+          <span class="sensor-label">Accel Z</span>
+          <span class="sensor-value" id="sv-accelz">0.00<small>g</small></span>
+        </div>
+        <div class="sensor-tile sensor-tile-motion">
+          <span class="sensor-label">Motion (PIR)</span>
+          <span class="sensor-value" id="sv-motion">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent events -->
+    <section class="card card-wide card-tall">
+      <h2>Recent events</h2>
+      <div class="events-table-wrap">
+        <table class="events-table">
+          <thead>
+            <tr><th>Time</th><th>Prediction</th><th>Confidence</th><th>Vibration</th><th>Motion</th></tr>
+          </thead>
+          <tbody id="events-body">
+            <tr class="events-empty"><td colspan="5">No suspicious events yet — the forest is quiet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer class="foot-note">
+  <span id="foot-mode">Live mode — polling backend at <code id="foot-endpoint">/api</code></span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
